@@ -1,0 +1,29 @@
+* {
+    background-color: rgb(247, 245, 245);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+}
+
+.winnerBox {
+    font-weight: bolder;
+    font-size: larger;
+}
+
+#blockContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+}
+
+.block {
+    border: solid;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+}
