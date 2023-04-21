@@ -10,7 +10,6 @@ const gameBoard = {
       const newBlock = document.createElement('div');
       newBlock.classList.add('block');
       newBlock.setAttribute('id', `block${i}`);
-      newBlock.innerText = i;
       newBlock.addEventListener('click', (e) => this.blockActivator(newBlock));
       blockContainer.appendChild(newBlock);
     }
@@ -18,7 +17,7 @@ const gameBoard = {
   },
 
   blockActivator(block) {
-    if (block.innerText !== 'X' && block.innerText !== 'O') {
+    if ((block.innerText !== 'X' && block.innerText !== 'O') && (playerOne.score !== 4 && playerTwo.score !== 4)) {
       block.innerText = this.turn.icon;
       this.turn.clickedBlocks.push(block.id);
 
@@ -43,7 +42,12 @@ const gameBoard = {
           this.winDeclaration(this.turn);
         }
         if (playerOne.clickedBlocks.length == 5 && playerTwo.clickedBlocks.length == 4) {
-          return console.log("It's a draw!");
+          declarationDiv.innerText = "It's a Draw!";
+          return this.newRound();
+        }
+        if (playerOne.clickedBlocks.length == 4 && playerTwo.clickedBlocks.length == 5) {
+          declarationDiv.innerText = "It's a Draw!";
+          return this.newRound();
         }
       }
     }
@@ -55,14 +59,48 @@ const gameBoard = {
   },
 
   winDeclaration(player) {
-    const div = document.createElement('div');
-    div.classList.add('winnerBox');
-    div.innerText = `${player.name} has won!`;
-    document.body.appendChild(div);
+    declarationDiv.innerText = `${player.name} won that round!`;
+    player.score += 1;
+
+    if (player.score == 4) {
+      playerOneScore.innerText = `${playerOne.name}'s score = ${playerOne.score}`;
+      playerTwoScore.innerText = `${playerTwo.name}'s score = ${playerTwo.score}`;
+      return declarationDiv.innerText = `Game over - ${player.name} is the champion!`;
+    }
+    this.newRound();
   },
 
-  gameReset() {
+  newRound() {
+    // Take players array of blocks and erase
 
+    playerOne.clickedBlocks = [];
+    playerTwo.clickedBlocks = [];
+
+    // Change inner text of board blocks
+
+    const blockContainer = document.querySelector('#blockContainer');
+    const blocks = blockContainer.childNodes;
+
+    for (let i = 0; i < this.boardBlocks.length; i++) {
+      blocks[i].innerText = ' ';
+    }
+
+    // Update scoreboard
+
+    playerOneScore.innerText = `${playerOne.name}'s score = ${playerOne.score}`;
+    playerTwoScore.innerText = `${playerTwo.name}'s score = ${playerTwo.score}`;
+  },
+
+  newGame() {
+    this.newRound();
+
+    declarationDiv.innerText = 'New game started! First round.';
+
+    playerOne.score = 0;
+    playerTwo.score = 0;
+
+    playerOneScore.innerText = `${playerOne.name}'s score = ${playerOne.score}`;
+    playerTwoScore.innerText = `${playerTwo.name}'s score = ${playerTwo.score}`;
   },
 
 };
@@ -70,11 +108,47 @@ const gameBoard = {
 const Player = (name) => {
   const icon = 'X';
   const clickedBlocks = [];
-  return { name, icon, clickedBlocks };
+  const score = 0;
+  return {
+    name, icon, clickedBlocks, score,
+  };
 };
 
 const playerOne = Player('Jerem');
 const playerTwo = Player('Levi');
 playerTwo.icon = 'O';
+
+function changeP1Name() {
+  const text = document.getElementById('playerOneName').value;
+  playerOne.name = text;
+  playerOneScore.innerText = `${playerOne.name}'s score = ${playerOne.score}`;
+  console.log(text);
+}
+
+function changeP2Name() {
+  const text = document.getElementById('playerTwoName').value;
+  playerTwo.name = text;
+  playerTwoScore.innerText = `${playerTwo.name}'s score = ${playerTwo.score}`;
+  console.log(text);
+}
+
+const bottomDiv = document.querySelector('#declareDiv');
+
+const declarationDiv = document.createElement('div');
+declarationDiv.classList.add('winnerBox');
+bottomDiv.appendChild(declarationDiv);
+
+const playerOneScore = document.createElement('div');
+playerOneScore.classList.add('playerOneScore');
+bottomDiv.appendChild(playerOneScore);
+
+const playerTwoScore = document.createElement('div');
+playerTwoScore.classList.add('playerTwoScore');
+bottomDiv.appendChild(playerTwoScore);
+
+const newGameButton = document.querySelector('#newGameButton');
+newGameButton.addEventListener('click', (e) => {
+  gameBoard.newGame();
+});
 
 gameBoard.createBoard();

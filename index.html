@@ -8,10 +8,27 @@
     <title>Document</title>
 </head>
 <body>
-
+    <div id="top-div">Tic Tac Toe</div>
     <div id="blockContainer"></div>
 
+    <button id="newGameButton">New Game</button>
 
+    <div id="bottom">
+        <div class="customNames">
+            <div class="changeName">
+                <label for="playerOneName">Player One Name</label>
+                <input type="text" placeholder="Player One Name" id="playerOneName">
+                <button type="button" onclick="changeP1Name()">submit</button>
+            </div>
+            <div class="changeName">
+                <label>Player Two Name</label>
+                <input type="text" placeholder="Player Two Name" id="playerTwoName">
+                <button type="button" onclick="changeP2Name()">submit</button>
+            </div>
+        </div>
+
+    <div id="declareDiv"></div>
+    </div>
 
 
     <script src="javascript.js"></script>
